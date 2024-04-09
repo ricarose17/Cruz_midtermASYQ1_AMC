@@ -1,0 +1,128 @@
+1.Why is the status bar in app.js not working?
+Must import the status bar first to define. From the upper part of the code (line 1) include 
+import { StatusBar  } from 'expo-status-bar';
+
+2. Why the property "navigation" doesn't exist.
+Syntax error in importing '@reactnative-navigation/bottom-tabs'; //must remove the word native in react.
+This will do '@react-navigation/bottom-tabs'
+
+3. What is missing on line 61?
+Enclosing tag <>
+
+4. What would be the correct syntax for the component error on line 70?
+Misspelled word mange3xpense, should be ManageExpense, based on the name of the file.
+Also insert the closing tag
+</NavigationContainer>
+</ExpensesContextProvider>
+</>
+
+5. Why the global styles not working?
+Because of the misspelled word “Styles”. It should be a small letter ‘s’. Referring to the name of the file inside constants which is “styles.js”
+
+6. Stack and BottomTabs are not working. What syntax are missing?
+const Stack = createNativeStackNavigator();
+const BottomTabs = createBottomTabNavigator();
+
+7. Unexpected token at line 52. What is the correct solution?
+Because one line is missing. This should complete the code. 
+<Ionicons name="hourglass" size={size} color={color} />
+
+8. Got an error with BottomTabs. Define the solution.
+const BottomTabs = createBottomTabNavigator();
+
+9. How to hide the ExpensesOverview in the header section
+To hide the header section, in StackScreen name= “ExpensesOverview”, the headershown should be equals to false.
+<Stack.Screen name="ExpensesOverview" component={ExpensesOverview} options={{headerShown: false}} />
+
+10. Why is reactnative-navigation unable to resolve?
+In the upper part where we import, remove the word native in reactnative. 
+This should do '@react-navigation/bottom-tabs'
+
+Below is the entire code in app.js
+
+import { StatusBar  } from 'expo-status-bar';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import {  Ionicons } from '@expo/vector-icons';
+import ManageExpense from './screens/ManageExpense';
+import RecentExpenses from './screens/RecentExpenses';
+import AllExpenses from './screens/AllExpenses';
+import { GlobalStyles } from './constants/styles';
+import IconButton from './components/UI/IconButton';
+import ExpensesContextProvider from './store/expenses-context'
+
+const Stack = createNativeStackNavigator();
+const BottomTabs = createBottomTabNavigator();
+
+function ExpensesOverview(){
+  return ( 
+  <BottomTabs.Navigator screenOptions={({navigation}) => ({
+      headerStyle: { backgroundColor: GlobalStyles.colors.primary500 },
+      headerTintColor: 'white',
+      tabBarStyle: { backgroundColor: GlobalStyles.colors.primary500 },
+      tabBarActiveTintColor: GlobalStyles.colors.accent500,
+      headerRight: ({tintColor}) => 
+      <IconButton 
+      icon="add" 
+      size={24} 
+      color={ tintColor} 
+        onPress={() => {
+            navigation.navigate('ManageExpense');
+        }} />
+  })}>
+    <BottomTabs.Screen 
+    name="RecentExpenses" 
+    component={RecentExpenses}
+    options={{
+      title: 'Recent Expenses',
+      tabBarLabel: 'Recent',
+      tabBarIcon: ({color, size}) => 
+      <Ionicons name="hourglass" size={size} color={color} />
+    }}
+     />
+    <BottomTabs.Screen 
+    name="AllExpenses" 
+    component={AllExpenses}
+      options={{
+      title: 'All Expenses',
+      tabBarLabel: 'All Expenses',
+      tabBarIcon: ({color, size}) => 
+      <Ionicons name="hourglass" size={size} color={color} />
+    }} />
+  
+  </BottomTabs.Navigator>
+  );
+}
+
+
+export default function App() {
+  return(
+      <>
+      <StatusBar style="light" />
+      <ExpensesContextProvider>
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{
+          headerStyle: { backgroundColor: GlobalStyles.colors.primary500 },
+          headerTintColor: 'white'
+        }}>
+        <Stack.Screen name="ExpensesOverview" component={ExpensesOverview} options={{headerShown: false}} />
+        <Stack.Screen name="ManageExpense" component={ManageExpense} options={{
+            presentation: 'modal',
+
+        }} />
+        </Stack.Navigator>
+      
+      </NavigationContainer>
+      </ExpensesContextProvider>
+
+      </>
+    
+      
+    
+  );
+
+}
+
+
+
